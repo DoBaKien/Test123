@@ -1,8 +1,10 @@
 import { Text } from "@react-native-material/core";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
   Dimensions,
   FlatList,
+  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -13,6 +15,20 @@ import ListCart from "../component/ListCart";
 import data from "../data/Data";
 import { Divider } from "@react-native-material/core";
 const Cart = ({ navigation }) => {
+  const animatedScale = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    animatedScale.setValue(1);
+  }, []);
+  const handlePress = () => {
+    animatedScale.setValue(0.8);
+    Animated.spring(animatedScale, {
+      toValue: 1,
+      bounciness: 24,
+      speed: 20,
+      useNativeDriver: true,
+    }).start();
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -47,11 +63,13 @@ const Cart = ({ navigation }) => {
             variant="outlined"
             style={styles.input}
           />
-          <TouchableOpacity>
-            <View style={styles.buttonadd}>
+          <Pressable onPress={handlePress}>
+            <Animated.View
+              style={[styles.btn, { transform: [{ scale: animatedScale }] }]}
+            >
               <Text style={{ color: "white" }}>Apply</Text>
-            </View>
-          </TouchableOpacity>
+            </Animated.View>
+          </Pressable>
         </View>
         <View style={styles.viewPrice}>
           <View
@@ -109,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  buttonadd: {
+  btn: {
     width: 60,
     backgroundColor: "#965E2C",
     alignItems: "center",

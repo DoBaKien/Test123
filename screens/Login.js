@@ -54,8 +54,10 @@ function Login({ navigation }) {
                 <Text style={styles.text1}>Forgot Password</Text>
               </View>
             </TouchableOpacity>
+
             <View style={{ flexDirection: "row", marginTop: 50 }}>
               <Text> Don't have an account? </Text>
+
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("Register");

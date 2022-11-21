@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Animated,
   Dimensions,
   Image,
+  Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -17,6 +19,20 @@ const Detail = ({ route, navigation }) => {
   const [count, setCount] = useState(0);
   const onPress = () => setCount((prevCount) => prevCount + 1);
   const onPress1 = () => setCount((prevCount) => prevCount - 1);
+  const animatedScale = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    animatedScale.setValue(1);
+  }, []);
+  const handlePress = () => {
+    animatedScale.setValue(0.8);
+    Animated.spring(animatedScale, {
+      toValue: 1,
+      bounciness: 24,
+      speed: 20,
+      useNativeDriver: true,
+    }).start();
+  };
   return (
     <View style={styles.container}>
       <View
@@ -33,9 +49,16 @@ const Detail = ({ route, navigation }) => {
           <Icon name="arrow-circle-left" size={40} color="white" />
         </TouchableOpacity>
 
-        <View style={styles.hearticon}>
-          <Icona name="heart" size={25} color="red" />
-        </View>
+        <Pressable
+          style={{ position: "absolute", right: 10 }}
+          onPress={handlePress}
+        >
+          <Animated.View
+            style={[styles.btn, { transform: [{ scale: animatedScale }] }]}
+          >
+            <Icona name="heart" size={25} color="red" />
+          </Animated.View>
+        </Pressable>
       </View>
       <View style={{ flex: 1, padding: 30 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -88,6 +111,15 @@ const Detail = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  btn: {
+    marginTop: 20,
+    backgroundColor: "white",
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   addcart: {
     backgroundColor: "#965E2C",
     justifyContent: "center",
